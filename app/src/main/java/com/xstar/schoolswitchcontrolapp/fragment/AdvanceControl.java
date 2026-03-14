@@ -14,37 +14,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.google.android.material.button.MaterialButton;
 import com.xstar.schoolswitchcontrolapp.R;
-import com.xstar.schoolswitchcontrolapp.viewmodel.DisplayControlViewModel;
+import com.xstar.schoolswitchcontrolapp.viewmodel.AdvanceControlViewModel;
 
-public class DisplayControl extends Fragment {
+public class AdvanceControl extends Fragment {
 
-    private DisplayControlViewModel mViewModel;
+    private AdvanceControlViewModel mViewModel;
 
-    public static DisplayControl newInstance() {
-        return new DisplayControl();
+    public static AdvanceControl newInstance() {
+        return new AdvanceControl();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(DisplayControlViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(AdvanceControlViewModel.class);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_display_control, container, false);
+        return inflater.inflate(R.layout.fragment_advance_control, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        Button btnAdvance = view.findViewById(R.id.btnAdvance);
-        btnAdvance.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_displayControl_to_advanceControl);
+        Button btnBack = view.findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v->{
+            Navigation.findNavController(v).navigate(R.id.action_advanceControl_to_displayControl);
         });
     }
 

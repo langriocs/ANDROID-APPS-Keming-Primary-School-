@@ -2,13 +2,24 @@
     <string name="app_name">School Switch Control App</string>
     <string name="press_to_start">PRESS TO START</string>
     <string name="wall_hdmi">Wall HDMI</string>
-    <string name="projector">projector</string>
     <string name="wireless1">wireless 1</string>
     <string name="wireless2">wireless 2</string>
+    <string name="projector">projector</string>
     <string name="tv_left">tv left</string>
     <string name="tv_right">tv right</string>
     <string name="video_source">video source</string>
     <string name="audio">audio</string>
     <string name="advance">advance</string>
     <string name="pwr_shutdown">pwr shutdown</string>
+    <string name="back">back</string>
+    <string name="display_control">display control</string>
+    <string name="screen_control">screen control</string>
+    <string name="projector_on">projector on</string>
+    <string name="projector_off">projector off</string>
+    <string name="tv_left_off">tv left off</string>
+    <string name="tv_left_on">tv left on</string>
+    <string name="tv_right_off">tv right off</string>
+    <string name="tv_right_on">tv right on</string>
+    <string name="screen_up">screen up</string>
+    <string name="screen_down">screen down</string>
 </resources>

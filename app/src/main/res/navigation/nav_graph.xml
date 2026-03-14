@@ -24,5 +24,18 @@
         android:id="@+id/displayControl"
         android:name="com.xstar.schoolswitchcontrolapp.fragment.DisplayControl"
         android:label="fragment_display_control"
-        tools:layout="@layout/fragment_display_control" />
+        tools:layout="@layout/fragment_display_control" >
+        <action
+            android:id="@+id/action_displayControl_to_advanceControl"
+            app:destination="@id/advanceControl" />
+    </fragment>
+    <fragment
+        android:id="@+id/advanceControl"
+        android:name="com.xstar.schoolswitchcontrolapp.fragment.AdvanceControl"
+        android:label="fragment_advance_control"
+        tools:layout="@layout/fragment_advance_control" >
+        <action
+            android:id="@+id/action_advanceControl_to_displayControl"
+            app:destination="@id/displayControl" />
+    </fragment>
 </navigation>
