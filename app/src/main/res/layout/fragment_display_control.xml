@@ -174,15 +174,14 @@
         android:id="@+id/menu_panel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_marginHorizontal="8dp"
         android:background="@drawable/panel_border"
         android:orientation="vertical"
         android:padding="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@id/audio_panel"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="@id/audio_panel">
 
         <Button
             android:id="@+id/btnAdvance"
@@ -203,16 +202,7 @@
             android:textAllCaps="true"
             android:textSize="24sp" />
 
-        <TextView
-            android:id="@+id/lblMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="5dp"
-            android:text="MENU"
-            android:textAllCaps="true"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+
 
     </LinearLayout>
 
