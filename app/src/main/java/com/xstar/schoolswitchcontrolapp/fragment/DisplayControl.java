@@ -13,13 +13,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
+import com.xstar.schoolswitchcontrolapp.AppConstant;
 import com.xstar.schoolswitchcontrolapp.R;
-import com.xstar.schoolswitchcontrolapp.viewmodel.DisplayControlViewModel;
+import com.xstar.schoolswitchcontrolapp.viewmodel.MainControlViewModel;
 
 public class DisplayControl extends Fragment {
 
-    private DisplayControlViewModel mViewModel;
+    private MainControlViewModel mViewModel;
+    private int sourceDisplay = AppConstant.WALL_HDMI;
+
 
     public static DisplayControl newInstance() {
         return new DisplayControl();
@@ -28,7 +32,8 @@ public class DisplayControl extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(DisplayControlViewModel.class);
+        // Using requireActivity() to share the ViewModel across fragments
+        mViewModel = new ViewModelProvider(requireActivity()).get(MainControlViewModel.class);
     }
 
     @Override
@@ -41,6 +46,9 @@ public class DisplayControl extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Status TextComponents
+        TextView txtSwitchStatus = view.findViewById(R.id.txtSwitchStatus);
+
         // Video Source Buttons
         Button btnWallHDMI = view.findViewById(R.id.btnWallHDMI);
         Button btnProjector = view.findViewById(R.id.btnProjector);
@@ -48,6 +56,14 @@ public class DisplayControl extends Fragment {
         Button btnTVLeft = view.findViewById(R.id.btnTVLeft);
         Button btnWireless2 = view.findViewById(R.id.btnWireless2);
         Button btnTVRight = view.findViewById(R.id.btnTVRight);
+
+        // Ensure connections are active
+        mViewModel.connectSwitcher(AppConstant.SWITCHER_IP, AppConstant.SWITCHER_PORT);
+
+        // Observe Connection Status
+        mViewModel.getSwitcherConnected().observe(getViewLifecycleOwner(), isConnected -> {
+            txtSwitchStatus.setText("Switcher Status: " + (isConnected ? "Connected" : "Not Connected"));
+        });
 
         // Audio Panel Buttons
         Button btnWallHDMIAudio = view.findViewById(R.id.btnWallHDMIAudio);
@@ -58,37 +74,19 @@ public class DisplayControl extends Fragment {
         Button btnAdvance = view.findViewById(R.id.btnAdvance);
         Button btnShutdown = view.findViewById(R.id.btnShutdown);
 
-        // Click Listeners for Video Source (Inlined)
-        btnWallHDMI.setOnClickListener(v -> {
-            // TODO: Implement video source switching logic for Wall HDMI
+        // Click Listeners for Video Source
+        btnWallHDMI.setOnClickListener(v -> setSource(AppConstant.WALL_HDMI));
+        btnWireless1.setOnClickListener(v -> setSource(AppConstant.WIRELESS_1));
+        btnWireless2.setOnClickListener(v -> setSource(AppConstant.WIRELESS_2));
 
-        });
-        btnProjector.setOnClickListener(v -> {
-            // TODO: Implement video source switching logic for Projector
-        });
-        btnWireless1.setOnClickListener(v -> {
-            // TODO: Implement video source switching logic for Wireless 1
-        });
-        btnTVLeft.setOnClickListener(v -> {
-            // TODO: Implement video source switching logic for TV Left
-        });
-        btnWireless2.setOnClickListener(v -> {
-            // TODO: Implement video source switching logic for Wireless 2
-        });
-        btnTVRight.setOnClickListener(v -> {
-            // TODO: Implement video source switching logic for TV Right
-        });
+        btnProjector.setOnClickListener(v -> setDisplay(AppConstant.PROJECTOR));
+        btnTVLeft.setOnClickListener(v -> setDisplay(AppConstant.TV_1));
+        btnTVRight.setOnClickListener(v -> setDisplay(AppConstant.TV_2));
 
-        // Click Listeners for Audio (Inlined)
-        btnWallHDMIAudio.setOnClickListener(v -> {
-            // TODO: Implement audio switching logic for Wall HDMI Audio
-        });
-        btnWireless1Audio.setOnClickListener(v -> {
-            // TODO: Implement audio switching logic for Wireless 1 Audio
-        });
-        btnWireless2Audio.setOnClickListener(v -> {
-            // TODO: Implement audio switching logic for Wireless 2 Audio
-        });
+        // Click Listeners for Audio
+        btnWallHDMIAudio.setOnClickListener(v -> setAudio(AppConstant.WALL_HDMI));
+        btnWireless1Audio.setOnClickListener(v -> setAudio(AppConstant.WIRELESS_1));
+        btnWireless2Audio.setOnClickListener(v -> setAudio(AppConstant.WIRELESS_2));
 
         // Click Listeners for Menu
         btnAdvance.setOnClickListener(v -> {
@@ -98,5 +96,17 @@ public class DisplayControl extends Fragment {
         btnShutdown.setOnClickListener(v -> {
             // TODO: Implement shutdown logic here
         });
+    }
+
+    private void setDisplay(int outDisplay) {
+        mViewModel.sendToSwitcher("s in " + sourceDisplay + " av out " + outDisplay + "!");
+    }
+
+    private void setAudio(int source) {
+        mViewModel.sendToSwitcher("s in " + source + " av out " + AppConstant.AUDIO_OUTPUT + "!");
+    }
+
+    private void setSource(int source) {
+        sourceDisplay = source;
     }
 }
