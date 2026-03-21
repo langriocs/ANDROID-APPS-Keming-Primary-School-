@@ -53,8 +53,8 @@ public class AdvanceControl extends Fragment {
         // Display Control Buttons
         Button btnProjectorOn = view.findViewById(R.id.btnProjectorOn);
         Button btnProjectorOff = view.findViewById(R.id.btnProjectorOff);
-        Button btnTVLeftOn = view.findViewById(R.id.btnTVLeft); // Note: resource ID in XML is btnTVLeft for On
-        Button btnTVLeftOff = view.findViewById(R.id.btnWireless1); // Note: resource ID in XML is btnWireless1 for Left Off
+        Button btnTVLeftOn = view.findViewById(R.id.btnTVLeft);
+        Button btnTVLeftOff = view.findViewById(R.id.btnWireless1);
         Button btnTVRightOn = view.findViewById(R.id.btnTVRightOn);
         Button btnTVRightOff = view.findViewById(R.id.btnTVRightOff);
 
@@ -88,17 +88,33 @@ public class AdvanceControl extends Fragment {
             txtMotorizeStatus.setText("Screen: " + (isConnected ? "Connected" : "Not Connected"));
         });
 
+        // Observe Power States for Option Button behavior
+        mViewModel.getProjectorPowerOn().observe(getViewLifecycleOwner(), isOn -> {
+            btnProjectorOn.setEnabled(!isOn);
+            btnProjectorOff.setEnabled(isOn);
+        });
+
+        mViewModel.getLeftTVPowerOn().observe(getViewLifecycleOwner(), isOn -> {
+            btnTVLeftOn.setEnabled(!isOn);
+            btnTVLeftOff.setEnabled(isOn);
+        });
+
+        mViewModel.getRightTVPowerOn().observe(getViewLifecycleOwner(), isOn -> {
+            btnTVRightOn.setEnabled(!isOn);
+            btnTVRightOff.setEnabled(isOn);
+        });
+
         // Click Listeners for Projector
-        btnProjectorOn.setOnClickListener(v -> mViewModel.sendToProjector("PWR1"));
-        btnProjectorOff.setOnClickListener(v -> mViewModel.sendToProjector("PWR0"));
+        btnProjectorOn.setOnClickListener(v -> mViewModel.sendToProjector("PWR1", true));
+        btnProjectorOff.setOnClickListener(v -> mViewModel.sendToProjector("PWR0", false));
 
         // Click Listeners for Left TV
-        btnTVLeftOn.setOnClickListener(v -> mViewModel.sendToLeftTV("power on!"));
-        btnTVLeftOff.setOnClickListener(v -> mViewModel.sendToLeftTV("power off!"));
+        btnTVLeftOn.setOnClickListener(v -> mViewModel.sendToLeftTV("power on!", true));
+        btnTVLeftOff.setOnClickListener(v -> mViewModel.sendToLeftTV("power off!", false));
 
         // Click Listeners for Right TV
-        btnTVRightOn.setOnClickListener(v -> mViewModel.sendToRightTV("power on!"));
-        btnTVRightOff.setOnClickListener(v -> mViewModel.sendToRightTV("power off!"));
+        btnTVRightOn.setOnClickListener(v -> mViewModel.sendToRightTV("power on!", true));
+        btnTVRightOff.setOnClickListener(v -> mViewModel.sendToRightTV("power off!", false));
 
         // Click Listeners for Screen
         btnScreenUp.setOnClickListener(v -> mViewModel.sendToMeteorizeScreen("screen up!"));

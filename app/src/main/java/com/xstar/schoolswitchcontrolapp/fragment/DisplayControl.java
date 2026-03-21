@@ -127,9 +127,9 @@ public class DisplayControl extends Fragment {
     private void performShutdown() {
         // Implementation for shutting down all devices
         mViewModel.sendToSwitcher("system standby!");
-        mViewModel.sendToProjector("power off!");
-        mViewModel.sendToLeftTV("power off!");
-        mViewModel.sendToRightTV("power off!");
+        mViewModel.sendToProjector("PWR0", false);
+        mViewModel.sendToLeftTV("power off!", false);
+        mViewModel.sendToRightTV("power off!", false);
         mViewModel.sendToMeteorizeScreen("screen up!");
     }
 
