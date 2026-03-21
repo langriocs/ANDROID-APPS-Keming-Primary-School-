@@ -10,7 +10,7 @@
         android:id="@+id/dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Confirm Shutdown"
+        android:text="@string/pwr_shutdown"
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textColor="@android:color/black"
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Are you sure you want to shut down all devices?"
+        android:text="@string/message_pwr_shutdown"
         android:textAlignment="center"
         android:textColor="@android:color/darker_gray"
         android:textSize="20sp" />

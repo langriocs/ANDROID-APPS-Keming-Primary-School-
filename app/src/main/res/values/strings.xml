@@ -23,4 +23,5 @@
     <string name="screen_up">screen up</string>
     <string name="screen_down">screen down</string>
     <string name="shutdown">shutdown</string>
+    <string name="message_pwr_shutdown">Are you sure you want to shut down all devices?</string>
 </resources>
