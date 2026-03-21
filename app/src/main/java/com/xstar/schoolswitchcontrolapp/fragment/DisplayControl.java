@@ -2,6 +2,9 @@ package com.xstar.schoolswitchcontrolapp.fragment;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,6 +15,7 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -93,9 +97,40 @@ public class DisplayControl extends Fragment {
             Navigation.findNavController(v).navigate(R.id.action_displayControl_to_advanceControl);
         });
 
-        btnShutdown.setOnClickListener(v -> {
-            // TODO: Implement shutdown logic here
+        btnShutdown.setOnClickListener(v -> showShutdownDialog());
+    }
+
+    private void showShutdownDialog() {
+        Dialog dialog = new Dialog(requireContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.layout_custom_dialog);
+
+        // To make the corners of the background resource visible, 
+        // the underlying window background must be set to transparent.
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+
+        Button btnCancel = dialog.findViewById(R.id.btn_cancel);
+        Button btnConfirm = dialog.findViewById(R.id.btn_confirm);
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+        btnConfirm.setOnClickListener(v -> {
+            performShutdown();
+            dialog.dismiss();
         });
+
+        dialog.show();
+    }
+
+    private void performShutdown() {
+        // Implementation for shutting down all devices
+        mViewModel.sendToSwitcher("system standby!");
+        mViewModel.sendToProjector("power off!");
+        mViewModel.sendToLeftTV("power off!");
+        mViewModel.sendToRightTV("power off!");
+        mViewModel.sendToMeteorizeScreen("screen up!");
     }
 
     private void setDisplay(int outDisplay) {

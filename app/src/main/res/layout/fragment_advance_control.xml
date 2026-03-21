@@ -197,22 +197,28 @@
         android:layout_marginTop="12dp"
         android:layout_marginStart="8dp"
         android:orientation="horizontal"
-        app:flow_horizontalGap="8dp"
         >
         <TextView android:id="@+id/txtProjectorStatus"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:text="Projector Status: Not Connected" />
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:text="Projector Status: Not Connected" />
 
         <TextView android:id="@+id/txtTV1Status"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:text="TV 1 Status: Not Connected" />
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:text="TV 1 Status: Not Connected" />
 
         <TextView android:id="@+id/txtTV2Status"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:text="TV 2 Status: Not Connected" />
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:text="TV 2 Status: Not Connected" />
 
         <TextView android:id="@+id/txtMotorizeStatus"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:text="Motorize Screen Status: Not Connected" />
+            android:layout_height="wrap_content"
+            android:text="Motorize Screen Status: Not Connected" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

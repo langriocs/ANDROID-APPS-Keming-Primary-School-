@@ -50,7 +50,22 @@ public class AdvanceControl extends Fragment {
         TextView txtTV2Status = view.findViewById(R.id.txtTV2Status);
         TextView txtMotorizeStatus = view.findViewById(R.id.txtMotorizeStatus);
 
-        // Ensure connections are active (will reuse existing ones if already connected)
+        // Display Control Buttons
+        Button btnProjectorOn = view.findViewById(R.id.btnProjectorOn);
+        Button btnProjectorOff = view.findViewById(R.id.btnProjectorOff);
+        Button btnTVLeftOn = view.findViewById(R.id.btnTVLeft); // Note: resource ID in XML is btnTVLeft for On
+        Button btnTVLeftOff = view.findViewById(R.id.btnWireless1); // Note: resource ID in XML is btnWireless1 for Left Off
+        Button btnTVRightOn = view.findViewById(R.id.btnTVRightOn);
+        Button btnTVRightOff = view.findViewById(R.id.btnTVRightOff);
+
+        // Screen Control Buttons
+        Button btnScreenUp = view.findViewById(R.id.btnScreenUp);
+        Button btnScreenDown = view.findViewById(R.id.btnScreenDown);
+
+        // Back Button
+        Button btnBack = view.findViewById(R.id.btnBack);
+
+        // Ensure connections are active
         mViewModel.connectProjector(AppConstant.PROJECTOR_IP, AppConstant.PROJECTOR_PORT);
         mViewModel.connectLeftTV(AppConstant.LEFT_TV_IP, AppConstant.LEFT_PORT);
         mViewModel.connectRightTV(AppConstant.RIGHT_TV_IP, AppConstant.RIGHT_PORT);
@@ -58,22 +73,38 @@ public class AdvanceControl extends Fragment {
 
         // Observe Connection Status
         mViewModel.getProjectorConnected().observe(getViewLifecycleOwner(), isConnected -> {
-            txtProjectorStatus.setText("Projector Status: " + (isConnected ? "Connected" : "Not Connected"));
+            txtProjectorStatus.setText("Projector: " + (isConnected ? "Connected" : "Not Connected"));
         });
 
         mViewModel.getLeftTVConnected().observe(getViewLifecycleOwner(), isConnected -> {
-            txtTV1Status.setText("TV 1 Status: " + (isConnected ? "Connected" : "Not Connected"));
+            txtTV1Status.setText("TV 1: " + (isConnected ? "Connected" : "Not Connected"));
         });
 
         mViewModel.getRightTVConnected().observe(getViewLifecycleOwner(), isConnected -> {
-            txtTV2Status.setText("TV 2 Status: " + (isConnected ? "Connected" : "Not Connected"));
+            txtTV2Status.setText("TV 2: " + (isConnected ? "Connected" : "Not Connected"));
         });
 
         mViewModel.getMeteorizeScreenConnected().observe(getViewLifecycleOwner(), isConnected -> {
-            txtMotorizeStatus.setText("Motorize Screen Status: " + (isConnected ? "Connected" : "Not Connected"));
+            txtMotorizeStatus.setText("Screen: " + (isConnected ? "Connected" : "Not Connected"));
         });
 
-        Button btnBack = view.findViewById(R.id.btnBack);
+        // Click Listeners for Projector
+        btnProjectorOn.setOnClickListener(v -> mViewModel.sendToProjector("PWR1"));
+        btnProjectorOff.setOnClickListener(v -> mViewModel.sendToProjector("PWR0"));
+
+        // Click Listeners for Left TV
+        btnTVLeftOn.setOnClickListener(v -> mViewModel.sendToLeftTV("power on!"));
+        btnTVLeftOff.setOnClickListener(v -> mViewModel.sendToLeftTV("power off!"));
+
+        // Click Listeners for Right TV
+        btnTVRightOn.setOnClickListener(v -> mViewModel.sendToRightTV("power on!"));
+        btnTVRightOff.setOnClickListener(v -> mViewModel.sendToRightTV("power off!"));
+
+        // Click Listeners for Screen
+        btnScreenUp.setOnClickListener(v -> mViewModel.sendToMeteorizeScreen("screen up!"));
+        btnScreenDown.setOnClickListener(v -> mViewModel.sendToMeteorizeScreen("screen down!"));
+
+        // Click Listener for Back
         btnBack.setOnClickListener(v -> {
             Navigation.findNavController(v).navigate(R.id.action_advanceControl_to_displayControl);
         });

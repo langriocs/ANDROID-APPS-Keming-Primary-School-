@@ -22,4 +22,5 @@
     <string name="tv_right_on">tv right on</string>
     <string name="screen_up">screen up</string>
     <string name="screen_down">screen down</string>
+    <string name="shutdown">shutdown</string>
 </resources>
