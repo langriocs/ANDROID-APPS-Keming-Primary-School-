@@ -126,7 +126,8 @@
         app:layout_constraintEnd_toStartOf="@+id/menu_panel"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@id/display_control"
-        app:layout_constraintTop_toTopOf="@id/display_control">
+        app:layout_constraintTop_toTopOf="@id/display_control"
+        android:visibility="invisible">
 
         <Button
             android:id="@+id/btnScreenUp"
@@ -197,6 +198,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginStart="8dp"
         android:orientation="horizontal"
+        android:visibility="invisible"
         >
         <TextView android:id="@+id/txtProjectorStatus"
             android:layout_width="wrap_content"

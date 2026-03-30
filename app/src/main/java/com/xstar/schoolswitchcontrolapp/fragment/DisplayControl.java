@@ -63,11 +63,26 @@ public class DisplayControl extends Fragment {
 
         // Ensure connections are active
         mViewModel.connectSwitcher(AppConstant.SWITCHER_IP, AppConstant.SWITCHER_PORT);
+        mViewModel.connectProjector(AppConstant.PROJECTOR_IP, AppConstant.PROJECTOR_PORT);
+        mViewModel.connectLeftTV(AppConstant.LEFT_TV_IP, AppConstant.LEFT_PORT);
+        mViewModel.connectRightTV(AppConstant.RIGHT_TV_IP, AppConstant.RIGHT_PORT);
 
         // Observe Connection Status
         mViewModel.getSwitcherConnected().observe(getViewLifecycleOwner(), isConnected -> {
             txtSwitchStatus.setText("Switcher Status: " + (isConnected ? "Connected" : "Not Connected"));
         });
+        mViewModel.getProjectorConnected().observe(getViewLifecycleOwner(), isConnected -> {
+//            txtProjectorStatus.setText("Projector: " + (isConnected ? "Connected" : "Not Connected"));
+        });
+
+        mViewModel.getLeftTVConnected().observe(getViewLifecycleOwner(), isConnected -> {
+//            txtTV1Status.setText("TV 1: " + (isConnected ? "Connected" : "Not Connected"));
+        });
+
+        mViewModel.getRightTVConnected().observe(getViewLifecycleOwner(), isConnected -> {
+//            txtTV2Status.setText("TV 2: " + (isConnected ? "Connected" : "Not Connected"));
+        });
+
 
         // Audio Panel Buttons
         Button btnWallHDMIAudio = view.findViewById(R.id.btnWallHDMIAudio);
@@ -98,6 +113,22 @@ public class DisplayControl extends Fragment {
         });
 
         btnShutdown.setOnClickListener(v -> showShutdownDialog());
+
+        mViewModel.sendToProjector(AppConstant.PROJECTOR_ON, true);
+        mViewModel.sendHexLeftTV(AppConstant.TV_ON, true);
+        mViewModel.sendHexRightTV(AppConstant.TV_ON, true);
+
+        // Wait 30 seconds
+        view.postDelayed(() -> {
+            setSource(AppConstant.WALL_HDMI);
+            mViewModel.sendToProjector(AppConstant.PROJECTOR_SET_SOURCE_HDMI_1, true);
+            mViewModel.sendHexRightTV(AppConstant.TV_SET_SOURCE_HDMI_1, true);
+            mViewModel.sendHexLeftTV(AppConstant.TV_SET_SOURCE_HDMI_1, true);
+
+//            setDisplay(AppConstant.PROJECTOR);
+//            setDisplay(AppConstant.TV_1);
+//            setDisplay(AppConstant.TV_2);
+        }, 30000);
     }
 
     private void showShutdownDialog() {
@@ -126,11 +157,11 @@ public class DisplayControl extends Fragment {
 
     private void performShutdown() {
         // Implementation for shutting down all devices
-        mViewModel.sendToSwitcher("system standby!");
-        mViewModel.sendToProjector("PWR0", false);
-        mViewModel.sendToLeftTV("power off!", false);
-        mViewModel.sendToRightTV("power off!", false);
-        mViewModel.sendToMeteorizeScreen("screen up!");
+//        mViewModel.sendToSwitcher("system standby!");
+        mViewModel.sendToProjector(AppConstant.PROJECTOR_OFF, false);
+        mViewModel.sendHexLeftTV(AppConstant.TV_OFF, false);
+        mViewModel.sendHexRightTV(AppConstant.TV_OFF, false);
+//        mViewModel.sendToMeteorizeScreen("screen up!");
     }
 
     private void setDisplay(int outDisplay) {

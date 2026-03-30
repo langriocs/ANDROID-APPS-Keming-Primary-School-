@@ -213,6 +213,7 @@
         android:layout_marginStart="8dp"
         android:orientation="horizontal"
         app:flow_horizontalGap="2dp"
+        android:visibility="invisible"
         >
 
         <TextView android:id="@+id/txtSwitchStatus"

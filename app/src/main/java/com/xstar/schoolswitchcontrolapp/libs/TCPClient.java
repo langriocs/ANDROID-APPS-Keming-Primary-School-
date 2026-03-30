@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
@@ -24,6 +25,7 @@ public class TCPClient implements Runnable {
     private OnConnectionStatusChanged connectionListener;
     private volatile boolean running = false;
     private PrintWriter bufferOut;
+    private OutputStream outputStream;
     private BufferedReader bufferIn;
     private Socket socket;
     private Thread clientThread;
@@ -74,13 +76,41 @@ public class TCPClient implements Runnable {
     public void sendMessage(final String message) {
         new Thread(() -> {
             if (bufferOut != null && isConnected.get()) {
-                Log.d(tag, "Sending: " + message);
+                Log.d(tag, "Sending String: " + message);
                 bufferOut.println(message);
                 bufferOut.flush();
             } else {
                 Log.w(tag, "Cannot send message, not connected: " + message);
             }
         }).start();
+    }
+
+    public void sendHex(final String hexString) {
+        new Thread(() -> {
+            if (outputStream != null && isConnected.get()) {
+                try {
+                    byte[] bytes = hexToBytes(hexString);
+                    Log.d(tag, "Sending Hex: " + hexString);
+                    outputStream.write(bytes);
+                    outputStream.flush();
+                } catch (IOException e) {
+                    Log.e(tag, "Error sending hex", e);
+                }
+            } else {
+                Log.w(tag, "Cannot send hex, not connected: " + hexString);
+            }
+        }).start();
+    }
+
+    public static byte[] hexToBytes(String s) {
+        s = s.replaceAll("\\s+", ""); // Remove spaces
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i + 1), 16));
+        }
+        return data;
     }
 
     public synchronized void stopClient() {
@@ -126,7 +156,8 @@ public class TCPClient implements Runnable {
                 setConnected(true);
                 Log.i(tag, "Connected successfully to " + serverIp);
 
-                bufferOut = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+                outputStream = socket.getOutputStream();
+                bufferOut = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream)), true);
                 bufferIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
                 while (running) {
@@ -167,6 +198,7 @@ public class TCPClient implements Runnable {
         try {
             if (bufferIn != null) bufferIn.close();
             if (bufferOut != null) bufferOut.close();
+            if (outputStream != null) outputStream.close();
             if (socket != null) socket.close();
         } catch (IOException e) {
             Log.e(tag, "Error closing resources", e);
@@ -174,5 +206,6 @@ public class TCPClient implements Runnable {
         socket = null;
         bufferIn = null;
         bufferOut = null;
+        outputStream = null;
     }
 }

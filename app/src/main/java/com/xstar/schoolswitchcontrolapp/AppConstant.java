@@ -1,10 +1,10 @@
 package com.xstar.schoolswitchcontrolapp;
 
 public class AppConstant {
-    public static final String SWITCHER_IP = "192.168.1.130"; //"192.168.1.10";;
+    public static final String SWITCHER_IP = "192.168.1.10"; //"192.168.1.130"; //
     public static final int SWITCHER_PORT = 8000;
 
-    public static final String PROJECTOR_IP = "192.168.1.130"; //"192.168.1.15";
+    public static final String PROJECTOR_IP = "192.168.1.15"; //"192.168.1.130"; //
     public static final int PROJECTOR_PORT = 23;
 
     public static final String LEFT_TV_IP = "192.168.1.13";
@@ -26,4 +26,13 @@ public class AppConstant {
     public static final int MOTORIZE_SCREEN = 4;
 
     public static final int AUDIO_OUTPUT = 4;
+    public static final String TV_ON = "AA 11 00 01 01 13";
+    public static final String TV_OFF = "AA 11 00 01 00 12";
+
+
+    public static final String PROJECTOR_ON = "PWR1";
+    public static final String PROJECTOR_OFF = "PWR0";
+    public static final String PROJECTOR_SET_SOURCE_HDMI_1 = "SRC5";
+    public static final String TV_SET_SOURCE_HDMI_1 = "AA 14 00 01 21 36";
+
 }

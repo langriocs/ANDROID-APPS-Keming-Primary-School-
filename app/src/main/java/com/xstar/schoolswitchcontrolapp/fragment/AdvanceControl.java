@@ -66,9 +66,7 @@ public class AdvanceControl extends Fragment {
         Button btnBack = view.findViewById(R.id.btnBack);
 
         // Ensure connections are active
-        mViewModel.connectProjector(AppConstant.PROJECTOR_IP, AppConstant.PROJECTOR_PORT);
-        mViewModel.connectLeftTV(AppConstant.LEFT_TV_IP, AppConstant.LEFT_PORT);
-        mViewModel.connectRightTV(AppConstant.RIGHT_TV_IP, AppConstant.RIGHT_PORT);
+
         mViewModel.connectMeteorizeScreen(AppConstant.M_SCREEN_IP, AppConstant.M_SCREEN_PORT);
 
         // Observe Connection Status
@@ -109,8 +107,8 @@ public class AdvanceControl extends Fragment {
         btnProjectorOff.setOnClickListener(v -> mViewModel.sendToProjector("PWR0", false));
 
         // Click Listeners for Left TV
-        btnTVLeftOn.setOnClickListener(v -> mViewModel.sendToLeftTV("power on!", true));
-        btnTVLeftOff.setOnClickListener(v -> mViewModel.sendToLeftTV("power off!", false));
+        btnTVLeftOn.setOnClickListener(v -> mViewModel.sendHexLeftTV(AppConstant.TV_ON, true));
+        btnTVLeftOff.setOnClickListener(v -> mViewModel.sendHexLeftTV(AppConstant.TV_OFF , false));
 
         // Click Listeners for Right TV
         btnTVRightOn.setOnClickListener(v -> mViewModel.sendToRightTV("power on!", true));

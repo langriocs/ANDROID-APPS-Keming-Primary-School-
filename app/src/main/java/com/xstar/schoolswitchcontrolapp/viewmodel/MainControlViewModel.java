@@ -66,14 +66,29 @@ public class MainControlViewModel extends ViewModel {
         projectorClient.sendMessage(msg);
         projectorPowerOn.postValue(powerOn);
     }
+
+    public void sendHexToProjector(String hex, boolean powerOn) {
+        projectorClient.sendHex(hex);
+        projectorPowerOn.postValue(powerOn);
+    }
     
     public void sendToLeftTV(String msg, boolean powerOn) { 
         leftTVClient.sendMessage(msg); 
         leftTVPowerOn.postValue(powerOn);
     }
+
+    public void sendHexLeftTV(String hex, boolean powerOn) {
+        leftTVClient.sendHex(hex);
+        leftTVPowerOn.postValue(powerOn);
+    }
     
     public void sendToRightTV(String msg, boolean powerOn) { 
         rightTVClient.sendMessage(msg); 
+        rightTVPowerOn.postValue(powerOn);
+    }
+
+    public void sendHexRightTV(String hex, boolean powerOn) {
+        rightTVClient.sendHex(hex);
         rightTVPowerOn.postValue(powerOn);
     }
     
