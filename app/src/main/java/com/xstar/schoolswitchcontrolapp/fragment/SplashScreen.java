@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.xstar.schoolswitchcontrolapp.R;
 import com.xstar.schoolswitchcontrolapp.viewmodel.SplashScreenViewModel;
@@ -42,6 +43,12 @@ public class SplashScreen extends Fragment {
         
         // Set click listener on the entire view (splash screen)
         view.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_splashScreen_to_displayControl);
+        });
+
+        // Also set click listener on the button specifically, as it might intercept clicks
+        Button btnPressStart = view.findViewById(R.id.btn_press_start);
+        btnPressStart.setOnClickListener(v -> {
             Navigation.findNavController(v).navigate(R.id.action_splashScreen_to_displayControl);
         });
     }

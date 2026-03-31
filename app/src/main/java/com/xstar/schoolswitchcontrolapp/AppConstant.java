@@ -17,8 +17,8 @@ public class AppConstant {
     public static final int M_SCREEN_PORT = 8887;
 
     public static final int WALL_HDMI = 1;
-    public static final int WIRELESS_1 = 1;
-    public static final int WIRELESS_2 = 2;
+    public static final int WIRELESS_1 = 2;
+    public static final int WIRELESS_2 = 3;
 
     public static final int PROJECTOR = 1;
     public static final int TV_1 = 2;
@@ -29,10 +29,9 @@ public class AppConstant {
     public static final String TV_ON = "AA 11 00 01 01 13";
     public static final String TV_OFF = "AA 11 00 01 00 12";
 
-
-    public static final String PROJECTOR_ON = "PWR1";
-    public static final String PROJECTOR_OFF = "PWR0";
-    public static final String PROJECTOR_SET_SOURCE_HDMI_1 = "SRC5";
+    public static final String PROJECTOR_ON = "25 31 50 4F 57 52 20 31";
+    public static final String PROJECTOR_OFF = "25 31 50 4F 57 52 20 30";
+    public static final String PROJECTOR_SET_SOURCE_HDMI_1 = "25 31 49 4E 50 54 20 33 31";
     public static final String TV_SET_SOURCE_HDMI_1 = "AA 14 00 01 21 36";
 
 }

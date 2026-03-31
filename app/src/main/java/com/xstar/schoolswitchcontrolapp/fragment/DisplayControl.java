@@ -27,6 +27,7 @@ public class DisplayControl extends Fragment {
 
     private MainControlViewModel mViewModel;
     private int sourceDisplay = AppConstant.WALL_HDMI;
+    private Runnable warmupRunnable;
 
 
     public static DisplayControl newInstance() {
@@ -114,21 +115,23 @@ public class DisplayControl extends Fragment {
 
         btnShutdown.setOnClickListener(v -> showShutdownDialog());
 
-        mViewModel.sendToProjector(AppConstant.PROJECTOR_ON, true);
-        mViewModel.sendHexLeftTV(AppConstant.TV_ON, true);
-        mViewModel.sendHexRightTV(AppConstant.TV_ON, true);
+        // Initialize system if not already initialized
+        mViewModel.getIsSystemInitialized().observe(getViewLifecycleOwner(), isInitialized -> {
+            if (!isInitialized) {
+                mViewModel.sendHexToProjector(AppConstant.PROJECTOR_ON, true);
+                mViewModel.sendHexLeftTV(AppConstant.TV_ON, true);
+                mViewModel.sendHexRightTV(AppConstant.TV_ON, true);
 
-        // Wait 30 seconds
-        view.postDelayed(() -> {
-            setSource(AppConstant.WALL_HDMI);
-            mViewModel.sendToProjector(AppConstant.PROJECTOR_SET_SOURCE_HDMI_1, true);
-            mViewModel.sendHexRightTV(AppConstant.TV_SET_SOURCE_HDMI_1, true);
-            mViewModel.sendHexLeftTV(AppConstant.TV_SET_SOURCE_HDMI_1, true);
-
-//            setDisplay(AppConstant.PROJECTOR);
-//            setDisplay(AppConstant.TV_1);
-//            setDisplay(AppConstant.TV_2);
-        }, 30000);
+                warmupRunnable = () -> {
+                    setSource(AppConstant.WALL_HDMI);
+                    mViewModel.sendHexToProjector(AppConstant.PROJECTOR_SET_SOURCE_HDMI_1, true);
+                    mViewModel.sendHexRightTV(AppConstant.TV_SET_SOURCE_HDMI_1, true);
+                    mViewModel.sendHexLeftTV(AppConstant.TV_SET_SOURCE_HDMI_1, true);
+                    mViewModel.setSystemInitialized(true);
+                };
+                view.postDelayed(warmupRunnable, 30000);
+            }
+        });
     }
 
     private void showShutdownDialog() {
@@ -150,15 +153,24 @@ public class DisplayControl extends Fragment {
         btnConfirm.setOnClickListener(v -> {
             performShutdown();
             dialog.dismiss();
+            Navigation.findNavController(requireView()).navigate(R.id.action_displayControl_to_splashScreen);
         });
 
         dialog.show();
     }
 
     private void performShutdown() {
+        // Cancel warmup timer if it's still running
+        if (warmupRunnable != null && getView() != null) {
+            getView().removeCallbacks(warmupRunnable);
+        }
+        
+        // Reset initialization flag so it runs again next time
+        mViewModel.setSystemInitialized(false);
+
         // Implementation for shutting down all devices
 //        mViewModel.sendToSwitcher("system standby!");
-        mViewModel.sendToProjector(AppConstant.PROJECTOR_OFF, false);
+        mViewModel.sendHexToProjector(AppConstant.PROJECTOR_OFF, false);
         mViewModel.sendHexLeftTV(AppConstant.TV_OFF, false);
         mViewModel.sendHexRightTV(AppConstant.TV_OFF, false);
 //        mViewModel.sendToMeteorizeScreen("screen up!");
@@ -174,5 +186,14 @@ public class DisplayControl extends Fragment {
 
     private void setSource(int source) {
         sourceDisplay = source;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Good practice to remove callbacks when view is destroyed
+        if (warmupRunnable != null && getView() != null) {
+            getView().removeCallbacks(warmupRunnable);
+        }
     }
 }

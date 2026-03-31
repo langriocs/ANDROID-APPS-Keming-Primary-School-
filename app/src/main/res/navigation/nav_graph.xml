@@ -28,6 +28,11 @@
         <action
             android:id="@+id/action_displayControl_to_advanceControl"
             app:destination="@id/advanceControl" />
+        <action
+            android:id="@+id/action_displayControl_to_splashScreen"
+            app:destination="@id/splashScreen"
+            app:popUpTo="@id/navgraph"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/advanceControl"

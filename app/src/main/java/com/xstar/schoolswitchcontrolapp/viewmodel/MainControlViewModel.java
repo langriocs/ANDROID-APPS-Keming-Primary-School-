@@ -20,6 +20,8 @@ public class MainControlViewModel extends ViewModel {
     private final MutableLiveData<Boolean> leftTVPowerOn = new MutableLiveData<>(false);
     private final MutableLiveData<Boolean> rightTVPowerOn = new MutableLiveData<>(false);
 
+    private final MutableLiveData<Boolean> isSystemInitialized = new MutableLiveData<>(false);
+
     private final TCPClient switcherClient;
     private final TCPClient projectorClient;
     private final TCPClient leftTVClient;
@@ -103,6 +105,9 @@ public class MainControlViewModel extends ViewModel {
     public LiveData<Boolean> getProjectorPowerOn() { return projectorPowerOn; }
     public LiveData<Boolean> getLeftTVPowerOn() { return leftTVPowerOn; }
     public LiveData<Boolean> getRightTVPowerOn() { return rightTVPowerOn; }
+
+    public LiveData<Boolean> getIsSystemInitialized() { return isSystemInitialized; }
+    public void setSystemInitialized(boolean initialized) { isSystemInitialized.postValue(initialized); }
 
     @Override
     protected void onCleared() {

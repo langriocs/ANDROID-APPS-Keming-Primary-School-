@@ -103,20 +103,20 @@ public class AdvanceControl extends Fragment {
         });
 
         // Click Listeners for Projector
-        btnProjectorOn.setOnClickListener(v -> mViewModel.sendToProjector("PWR1", true));
-        btnProjectorOff.setOnClickListener(v -> mViewModel.sendToProjector("PWR0", false));
+        btnProjectorOn.setOnClickListener(v -> mViewModel.sendHexToProjector(AppConstant.PROJECTOR_ON, true));
+        btnProjectorOff.setOnClickListener(v -> mViewModel.sendHexToProjector(AppConstant.PROJECTOR_OFF, false));
 
         // Click Listeners for Left TV
         btnTVLeftOn.setOnClickListener(v -> mViewModel.sendHexLeftTV(AppConstant.TV_ON, true));
         btnTVLeftOff.setOnClickListener(v -> mViewModel.sendHexLeftTV(AppConstant.TV_OFF , false));
 
         // Click Listeners for Right TV
-        btnTVRightOn.setOnClickListener(v -> mViewModel.sendToRightTV("power on!", true));
-        btnTVRightOff.setOnClickListener(v -> mViewModel.sendToRightTV("power off!", false));
+        btnTVRightOn.setOnClickListener(v -> mViewModel.sendHexRightTV(AppConstant.TV_ON, true));
+        btnTVRightOff.setOnClickListener(v -> mViewModel.sendHexRightTV(AppConstant.TV_OFF, false));
 
         // Click Listeners for Screen
-        btnScreenUp.setOnClickListener(v -> mViewModel.sendToMeteorizeScreen("screen up!"));
-        btnScreenDown.setOnClickListener(v -> mViewModel.sendToMeteorizeScreen("screen down!"));
+//        btnScreenUp.setOnClickListener(v -> mViewModel.sendToMeteorizeScreen("screen up!"));
+//        btnScreenDown.setOnClickListener(v -> mViewModel.sendToMeteorizeScreen("screen down!"));
 
         // Click Listener for Back
         btnBack.setOnClickListener(v -> {
