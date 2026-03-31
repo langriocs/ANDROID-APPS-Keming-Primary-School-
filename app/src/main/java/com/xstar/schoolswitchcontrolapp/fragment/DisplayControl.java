@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,7 +28,7 @@ public class DisplayControl extends Fragment {
 
     private MainControlViewModel mViewModel;
     private int sourceDisplay = AppConstant.WALL_HDMI;
-    private Runnable warmupRunnable;
+    private CountDownTimer warmupTimer;
 
 
     public static DisplayControl newInstance() {
@@ -54,6 +55,10 @@ public class DisplayControl extends Fragment {
         // Status TextComponents
         TextView txtSwitchStatus = view.findViewById(R.id.txtSwitchStatus);
 
+        // Warmup UI components
+        View layoutWarmup = view.findViewById(R.id.layoutWarmup);
+        TextView txtWarmupCountdown = view.findViewById(R.id.txtWarmupCountdown);
+
         // Video Source Buttons
         Button btnWallHDMI = view.findViewById(R.id.btnWallHDMI);
         Button btnProjector = view.findViewById(R.id.btnProjector);
@@ -72,18 +77,6 @@ public class DisplayControl extends Fragment {
         mViewModel.getSwitcherConnected().observe(getViewLifecycleOwner(), isConnected -> {
             txtSwitchStatus.setText("Switcher Status: " + (isConnected ? "Connected" : "Not Connected"));
         });
-        mViewModel.getProjectorConnected().observe(getViewLifecycleOwner(), isConnected -> {
-//            txtProjectorStatus.setText("Projector: " + (isConnected ? "Connected" : "Not Connected"));
-        });
-
-        mViewModel.getLeftTVConnected().observe(getViewLifecycleOwner(), isConnected -> {
-//            txtTV1Status.setText("TV 1: " + (isConnected ? "Connected" : "Not Connected"));
-        });
-
-        mViewModel.getRightTVConnected().observe(getViewLifecycleOwner(), isConnected -> {
-//            txtTV2Status.setText("TV 2: " + (isConnected ? "Connected" : "Not Connected"));
-        });
-
 
         // Audio Panel Buttons
         Button btnWallHDMIAudio = view.findViewById(R.id.btnWallHDMIAudio);
@@ -115,23 +108,44 @@ public class DisplayControl extends Fragment {
 
         btnShutdown.setOnClickListener(v -> showShutdownDialog());
 
-        // Initialize system if not already initialized
+        // Initialize system logic
         mViewModel.getIsSystemInitialized().observe(getViewLifecycleOwner(), isInitialized -> {
             if (!isInitialized) {
-                mViewModel.sendHexToProjector(AppConstant.PROJECTOR_ON, true);
-                mViewModel.sendHexLeftTV(AppConstant.TV_ON, true);
-                mViewModel.sendHexRightTV(AppConstant.TV_ON, true);
-
-                warmupRunnable = () -> {
-                    setSource(AppConstant.WALL_HDMI);
-                    mViewModel.sendHexToProjector(AppConstant.PROJECTOR_SET_SOURCE_HDMI_1, true);
-                    mViewModel.sendHexRightTV(AppConstant.TV_SET_SOURCE_HDMI_1, true);
-                    mViewModel.sendHexLeftTV(AppConstant.TV_SET_SOURCE_HDMI_1, true);
-                    mViewModel.setSystemInitialized(true);
-                };
-                view.postDelayed(warmupRunnable, 30000);
+                startWarmup(layoutWarmup, txtWarmupCountdown);
+            } else {
+                layoutWarmup.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void startWarmup(View layoutWarmup, TextView txtWarmupCountdown) {
+        layoutWarmup.setVisibility(View.VISIBLE);
+        
+        mViewModel.sendHexToProjector(AppConstant.PROJECTOR_ON, true);
+        mViewModel.sendHexLeftTV(AppConstant.TV_ON, true);
+        mViewModel.sendHexRightTV(AppConstant.TV_ON, true);
+
+        if (warmupTimer != null) {
+            warmupTimer.cancel();
+        }
+
+        warmupTimer = new CountDownTimer(30000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                txtWarmupCountdown.setText((millisUntilFinished / 1000) + "s");
+            }
+
+            @Override
+            public void onFinish() {
+                setSource(AppConstant.WALL_HDMI);
+                mViewModel.sendHexToProjector(AppConstant.PROJECTOR_SET_SOURCE_HDMI_1, true);
+                mViewModel.sendHexRightTV(AppConstant.TV_SET_SOURCE_HDMI_1, true);
+                mViewModel.sendHexLeftTV(AppConstant.TV_SET_SOURCE_HDMI_1, true);
+                
+                mViewModel.setSystemInitialized(true);
+                layoutWarmup.setVisibility(View.GONE);
+            }
+        }.start();
     }
 
     private void showShutdownDialog() {
@@ -140,8 +154,6 @@ public class DisplayControl extends Fragment {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.layout_custom_dialog);
 
-        // To make the corners of the background resource visible, 
-        // the underlying window background must be set to transparent.
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
@@ -160,20 +172,16 @@ public class DisplayControl extends Fragment {
     }
 
     private void performShutdown() {
-        // Cancel warmup timer if it's still running
-        if (warmupRunnable != null && getView() != null) {
-            getView().removeCallbacks(warmupRunnable);
+        if (warmupTimer != null) {
+            warmupTimer.cancel();
         }
         
-        // Reset initialization flag so it runs again next time
         mViewModel.setSystemInitialized(false);
 
-        // Implementation for shutting down all devices
-//        mViewModel.sendToSwitcher("system standby!");
         mViewModel.sendHexToProjector(AppConstant.PROJECTOR_OFF, false);
         mViewModel.sendHexLeftTV(AppConstant.TV_OFF, false);
         mViewModel.sendHexRightTV(AppConstant.TV_OFF, false);
-//        mViewModel.sendToMeteorizeScreen("screen up!");
+        setAudio(AppConstant.AUDIO_OUTPUT);
     }
 
     private void setDisplay(int outDisplay) {
@@ -191,9 +199,8 @@ public class DisplayControl extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // Good practice to remove callbacks when view is destroyed
-        if (warmupRunnable != null && getView() != null) {
-            getView().removeCallbacks(warmupRunnable);
+        if (warmupTimer != null) {
+            warmupTimer.cancel();
         }
     }
 }

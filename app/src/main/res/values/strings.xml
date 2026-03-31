@@ -24,4 +24,5 @@
     <string name="screen_down">screen down</string>
     <string name="shutdown">shutdown</string>
     <string name="message_pwr_shutdown">Are you sure you want to shut down all devices?</string>
+    <string name="please_wait">Please wait ...</string>
 </resources>
