@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.button.MaterialButton;
 import com.xstar.schoolswitchcontrolapp.R;
 import com.xstar.schoolswitchcontrolapp.viewmodel.SplashScreenViewModel;
 
@@ -40,9 +39,9 @@ public class SplashScreen extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        MaterialButton btnPressStart = view.findViewById(R.id.btn_press_start);
         
-        btnPressStart.setOnClickListener(v -> {
+        // Set click listener on the entire view (splash screen)
+        view.setOnClickListener(v -> {
             Navigation.findNavController(v).navigate(R.id.action_splashScreen_to_displayControl);
         });
     }
