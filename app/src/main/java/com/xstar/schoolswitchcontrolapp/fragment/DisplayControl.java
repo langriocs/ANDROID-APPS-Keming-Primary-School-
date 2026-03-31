@@ -29,7 +29,7 @@ public class DisplayControl extends Fragment {
     private MainControlViewModel mViewModel;
     private int sourceDisplay = AppConstant.WALL_HDMI;
     private CountDownTimer warmupTimer;
-
+    private boolean isShutdown = false;
 
     public static DisplayControl newInstance() {
         return new DisplayControl();
@@ -111,7 +111,9 @@ public class DisplayControl extends Fragment {
         // Initialize system logic
         mViewModel.getIsSystemInitialized().observe(getViewLifecycleOwner(), isInitialized -> {
             if (!isInitialized) {
-                startWarmup(layoutWarmup, txtWarmupCountdown);
+                if (!isShutdown) {
+                    startWarmup(layoutWarmup, txtWarmupCountdown);
+                }
             } else {
                 layoutWarmup.setVisibility(View.GONE);
             }
@@ -120,14 +122,15 @@ public class DisplayControl extends Fragment {
 
     private void startWarmup(View layoutWarmup, TextView txtWarmupCountdown) {
         layoutWarmup.setVisibility(View.VISIBLE);
-        
-        mViewModel.sendHexToProjector(AppConstant.PROJECTOR_ON, true);
-        mViewModel.sendHexLeftTV(AppConstant.TV_ON, true);
-        mViewModel.sendHexRightTV(AppConstant.TV_ON, true);
 
         if (warmupTimer != null) {
             warmupTimer.cancel();
+            return;
         }
+
+        mViewModel.sendHexToProjector(AppConstant.PROJECTOR_ON, true);
+        mViewModel.sendHexLeftTV(AppConstant.TV_ON, true);
+        mViewModel.sendHexRightTV(AppConstant.TV_ON, true);
 
         warmupTimer = new CountDownTimer(30000, 1000) {
             @Override
@@ -137,11 +140,12 @@ public class DisplayControl extends Fragment {
 
             @Override
             public void onFinish() {
+
                 setSource(AppConstant.WALL_HDMI);
                 mViewModel.sendHexToProjector(AppConstant.PROJECTOR_SET_SOURCE_HDMI_1, true);
                 mViewModel.sendHexRightTV(AppConstant.TV_SET_SOURCE_HDMI_1, true);
                 mViewModel.sendHexLeftTV(AppConstant.TV_SET_SOURCE_HDMI_1, true);
-                
+
                 mViewModel.setSystemInitialized(true);
                 layoutWarmup.setVisibility(View.GONE);
             }
@@ -163,6 +167,7 @@ public class DisplayControl extends Fragment {
 
         btnCancel.setOnClickListener(v -> dialog.dismiss());
         btnConfirm.setOnClickListener(v -> {
+            isShutdown = true;
             performShutdown();
             dialog.dismiss();
             Navigation.findNavController(requireView()).navigate(R.id.action_displayControl_to_splashScreen);
@@ -176,12 +181,14 @@ public class DisplayControl extends Fragment {
             warmupTimer.cancel();
         }
         
-        mViewModel.setSystemInitialized(false);
-
         mViewModel.sendHexToProjector(AppConstant.PROJECTOR_OFF, false);
+
+        mViewModel.sendHexLeftTV(AppConstant.TV_QRY, false);
         mViewModel.sendHexLeftTV(AppConstant.TV_OFF, false);
         mViewModel.sendHexRightTV(AppConstant.TV_OFF, false);
         setAudio(AppConstant.AUDIO_OUTPUT);
+
+        mViewModel.setSystemInitialized(false);
     }
 
     private void setDisplay(int outDisplay) {

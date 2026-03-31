@@ -26,12 +26,13 @@ public class AppConstant {
     public static final int MOTORIZE_SCREEN = 4;
 
     public static final int AUDIO_OUTPUT = 4;
-    public static final String TV_ON = "AA 11 00 01 01 13";
-    public static final String TV_OFF = "AA 11 00 01 00 12";
+    public static final String TV_ON = "AA 11 00 01 01 13 0D";
+    public static final String TV_OFF = "AA 11 00 01 00 12 0D";
+    public static final String TV_QRY = "AA 11 00 00 00 11 0D";
 
     public static final String PROJECTOR_ON = "25 31 50 4F 57 52 20 31 0D";
     public static final String PROJECTOR_OFF = "25 31 50 4F 57 52 20 30 0D";
-    public static final String PROJECTOR_SET_SOURCE_HDMI_1 = "25 31 49 4E 50 54 20 33 31";
-    public static final String TV_SET_SOURCE_HDMI_1 = "AA 14 00 01 21 36";
+    public static final String PROJECTOR_SET_SOURCE_HDMI_1 = "25 31 49 4E 50 54 20 33 31 0D";
+    public static final String TV_SET_SOURCE_HDMI_1 = "AA 14 00 01 21 36 0D";
 
 }

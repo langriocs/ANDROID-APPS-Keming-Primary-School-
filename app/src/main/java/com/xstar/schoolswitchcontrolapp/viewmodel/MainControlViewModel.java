@@ -41,6 +41,7 @@ public class MainControlViewModel extends ViewModel {
             tag,
             message -> {
                 Log.d(tag, "Received: " + message);
+
             },
             new TCPClient.OnConnectionStatusChanged() {
                 @Override
